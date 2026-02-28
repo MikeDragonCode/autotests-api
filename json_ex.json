@@ -1,0 +1,22 @@
+{
+  "string_example": "Hello, QA!",
+  "number_integer": 25,
+  "number_float": 3.14,
+  "boolean_true": true,
+  "boolean_false": false,
+  "null_value": null,
+  "object_example": {
+    "nested_string": "inside object",
+    "nested_number": 100
+  },
+  "array_example": [
+    "text",
+    10,
+    5.5,
+    true,
+    null,
+    {
+      "array_nested_object": "value"
+    }
+  ]
+}
