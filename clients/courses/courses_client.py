@@ -1,4 +1,4 @@
-from httpx import Response, Request, request
+from httpx import Response
 from clients.api_client import ApiClient
 from typing import TypedDict
 
