@@ -5,13 +5,23 @@ from typing import TypedDict
 from clients.private_http_builder import get_private_http_client, AuthenticationUserDict
 
 
+class Exercise(TypedDict):
+    id: str
+    title: str
+    courseId:str
+    maxScore: int
+    minScore: int
+    orderIndex: int
+    description: str
+    estimatedTime: str
+
 class GetExerciseDict(TypedDict):
     """
              Описание структуры запроса на получние упражнений.
              """
     courseId: str
 
-class CreateExerciseDict(TypedDict):
+class CreateExerciseRequestDict(TypedDict):
     """
           Описание структуры запроса на создание упражнений.
           """
@@ -22,6 +32,9 @@ class CreateExerciseDict(TypedDict):
     orderIndex: str
     description: str
     estimatedTime: str
+
+class CreateExerciseResponseDict(TypedDict):
+    exercise: Exercise
 
 class UpdateExerciseDict(TypedDict):
     """
@@ -53,16 +66,20 @@ class ExercisesClient(ApiClient):
                     :param query: Словарь с exercise_id.
                     :return: Ответ от сервера в виде объекта httpx.Response
                     """
-        return self.get('/api/v1/exercises/', params=query)
+        return self.get('/api/v1/exercises', params=query)
 
-    def create_exercises_api(self, request: CreateExerciseDict)-> Response:
+    def create_exercises_api(self, request: CreateExerciseRequestDict)-> Response:
         """
                       Метод создания уупрежнения.
 
                       :param request: Словарь с title, maxScore, minScore, description, estimatedTime, courseId, orderIndex
                       :return: Ответ от сервера в виде объекта httpx.Response
                       """
-        return self.post('/api/v1/exercises/', json=request)
+        return self.post('/api/v1/exercises', json=request)
+
+    def create_exercise(self, request: CreateExerciseRequestDict ) -> CreateExerciseResponseDict:
+        response = self.create_exercises_api(request)
+        return response.json()
 
     def update_exercise_api(self, exercise_id: str, request: UpdateExerciseDict) -> Response:
         """
