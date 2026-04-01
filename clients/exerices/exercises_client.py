@@ -2,6 +2,9 @@ from httpx import Response
 from clients.api_client import ApiClient
 from typing import TypedDict
 
+from clients.private_http_builder import get_private_http_client, AuthenticationUserDict
+
+
 class GetExerciseDict(TypedDict):
     """
              Описание структуры запроса на получние упражнений.
@@ -79,3 +82,6 @@ class ExercisesClient(ApiClient):
                        :return: Ответ от сервера в виде объекта httpx.Response
                        """
         return self.delete(f'/api/v1/exercises/{exercise_id}')
+
+def get_exercises_client(user: AuthenticationUserDict) -> ExercisesClient:
+    return ExercisesClient(client=get_private_http_client(user))

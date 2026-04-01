@@ -2,6 +2,24 @@ from httpx import Response
 from clients.api_client import ApiClient
 from typing import TypedDict
 
+from clients.files.files_client import File
+from clients.private_http_builder import AuthenticationUserDict, get_private_http_client
+from clients.users.public_users_client import User
+
+
+class Course:
+    """
+       Описание структуры курса.
+       """
+    id: str
+    title: str
+    maxScore: int
+    minScore: int
+    description: str
+    previewFile: File
+    estimatedTime: str
+    createdByUser: User
+
 class GetCoursesCreateDict(TypedDict):
     """
         Описание структуры запроса на получение списка курсов.
@@ -19,6 +37,12 @@ class CreateCoursesCreateDict(TypedDict):
     estimatedTime:str
     previewFileId: str
     createdByUserId: str
+
+class CreateCoursesResponseDict(TypedDict):
+    """
+        Описание структуры ответа создания файла.
+        """
+    course: Course
 
 class UpdateCoursesCreateDict(TypedDict):
     """
@@ -62,7 +86,11 @@ class CoursesClient(ApiClient):
                 previewFileId, createdByUserId.
                 :return: Ответ от сервера в виде объекта httpx.Response
                 """
-        return self.post('/api/v1/courses/', json=request)
+        return self.post('/api/v1/courses', json=request)
+
+    def create_course(self, request: CreateCoursesCreateDict) -> CreateCoursesResponseDict:
+        response = self.create_course_api(request)
+        return response.json()
 
     def update_file_api(self, course_id: str) -> Response:
         """
@@ -82,3 +110,12 @@ class CoursesClient(ApiClient):
                 :return: Ответ от сервера в виде объекта httpx.Response
                 """
         return self.delete(f'/api/v1/courses/{course_id}', json=request)
+
+
+def get_courses_client(user : AuthenticationUserDict) -> CoursesClient:
+    """
+         Функция создаёт экземпляр CoursesClient с уже настроенным HTTP-клиентом.
+
+         :return: Готовый к использованию CoursesClient.
+         """
+    return CoursesClient(client=get_private_http_client(user))
