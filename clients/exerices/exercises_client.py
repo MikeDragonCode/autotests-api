@@ -8,7 +8,7 @@ from clients.private_http_builder import get_private_http_client, Authentication
 class Exercise(TypedDict):
     id: str
     title: str
-    courseId:str
+    courseId: str
     maxScore: int
     minScore: int
     orderIndex: int
